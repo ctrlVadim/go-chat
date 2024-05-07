@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  chat:
+    build: ./
+    command: ./wait-for-postgres.sh db ./chat
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    environment:
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+
+  db:
+    restart: always
+    image: postgres:latest
+    volumes:
+      - ./.database/postgres/data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - 5436:5432
